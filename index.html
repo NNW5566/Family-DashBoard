@@ -257,13 +257,49 @@
       border-top: 1px solid var(--panel-border); line-height: 1.45;
     }
 
-    @media (max-width: 680px) {
+    /* ===== Responsive ===== */
+    @media (max-width: 720px) {
+      body { padding: 8px; }
+      .frame { border-width: 4px; border-radius: 14px; }
       .grid { grid-template-columns: 1fr; }
       .panel:nth-child(odd) { border-right: none; }
-      .cal-widget { flex-direction: column; gap: 10px; }
-      .cal-month { text-align: left; }
+      .panel { padding: 14px 14px; }
+      header { padding: 10px 14px; }
+      header h1 { font-size: 0.95rem; }
+
+      /* Calendar */
+      .cal-widget { flex-direction: column; gap: 12px; }
+      .cal-left { min-width: auto; display: flex; align-items: baseline; gap: 12px; }
+      .cal-daynum { font-size: 2.6rem; margin: 0; }
+      .cal-month { text-align: left; margin-bottom: 4px; }
+      .cal-grid .day { width: 28px; height: 28px; line-height: 20px; font-size: 0.78rem; }
+
+      /* Shuttle */
+      .shuttle-row { gap: 8px; }
+      .next-time { font-size: 1.85rem; }
+      .next-time.small { font-size: 1.55rem; }
+      .route { font-size: 0.8rem; max-width: 130px; }
+
+      /* Countdown & Weather */
+      .countdown-days { font-size: 1.5rem; }
+      .temp { font-size: 2rem; }
+      .weather-details { font-size: 0.78rem; }
+    }
+
+    @media (max-width: 400px) {
+      .cal-daynum { font-size: 2.2rem; }
+      .next-time { font-size: 1.7rem; }
+      .next-time.small { font-size: 1.4rem; }
+      .route { max-width: 110px; font-size: 0.75rem; }
+      .cal-grid .day { width: 24px; height: 24px; font-size: 0.7rem; }
+      .meta { gap: 8px; font-size: 0.8rem; }
+    }
+
+    @media (min-width: 721px) and (max-width: 900px) {
+      .grid { grid-template-columns: 1.1fr 1fr; }
       .next-time { font-size: 1.9rem; }
       .next-time.small { font-size: 1.6rem; }
+      .route { font-size: 0.8rem; max-width: 120px; }
     }
   </style>
 </head>
