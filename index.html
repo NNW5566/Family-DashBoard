@@ -81,7 +81,7 @@
       grid-template-columns: 1.15fr 1fr;
     }
     .panel {
-      padding: 16px 18px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--panel-border);
     }
     .panel:nth-child(odd) { border-right: 1px solid var(--panel-border); }
@@ -191,21 +191,21 @@
     }
 
     /* ===== Shuttle ===== */
-    .shuttle-block { margin-bottom: 14px; }
-    .shuttle-block:last-child { margin-bottom: 0; }
+    .shuttle-block { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--panel-border); }
+    .shuttle-block:last-of-type { margin-bottom: 4px; padding-bottom: 0; border-bottom: none; }
     .panel h2 {
-      font-size: 0.68rem; font-weight: 600; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px;
+      font-size: 0.65rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px;
     }
     .next-time {
-      font-size: 2.3rem; font-weight: 700; line-height: 1; margin: 2px 0 3px;
+      font-size: 2.05rem; font-weight: 700; line-height: 1.05; margin: 1px 0 2px;
       color: var(--blue);
     }
-    .next-time.small { font-size: 1.85rem; color: var(--green); }
-    .next-sub { font-size: 0.82rem; color: var(--muted); }
-    .route { font-size: 0.92rem; font-weight: 600; margin-top: 2px; }
-    .route-sub { font-size: 0.75rem; color: var(--muted); }
-    .updated { font-size: 0.68rem; color: var(--light-muted); margin-top: 4px; }
+    .next-time.small { font-size: 1.75rem; color: var(--green); }
+    .next-sub { font-size: 0.78rem; color: var(--muted); }
+    .route { font-size: 0.88rem; font-weight: 600; margin-top: 1px; }
+    .route-sub { font-size: 0.72rem; color: var(--muted); }
+    .updated { font-size: 0.65rem; color: var(--light-muted); margin-top: 6px; }
 
     /* ===== Countdown ===== */
     .countdown-row {
@@ -234,8 +234,8 @@
       .panel:nth-child(odd) { border-right: none; }
       .cal-widget { flex-direction: column; gap: 10px; }
       .cal-month { text-align: left; }
-      .next-time { font-size: 2.1rem; }
-      .next-time.small { font-size: 1.7rem; }
+      .next-time { font-size: 1.9rem; }
+      .next-time.small { font-size: 1.6rem; }
     }
   </style>
 </head>
@@ -276,7 +276,7 @@
           <h2>NEXT SHUTTLE · NR824</h2>
           <div class="next-time" id="next824">--:--</div>
           <div class="next-sub" id="range824">Then --:--</div>
-          <div class="route">聽濤雅苑 → 海栢花園</div>
+          <div class="route">聽濤雅苑 → 馬鞍山廣場</div>
           <div class="route-sub">循環線 · 住戶免費</div>
         </div>
         <div class="shuttle-block">
