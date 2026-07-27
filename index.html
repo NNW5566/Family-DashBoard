@@ -418,7 +418,7 @@
         </div>
         <div class="countdown-row">
           <div class="countdown-left">
-            <span class="countdown-label" contenteditable="true" id="fukuokaLabel">FUKUOKA TRIP</span>
+            <span class="countdown-label" contenteditable="true" id="fukuokaLabel">INFLIXIMAB</span>
             <input type="date" id="fukuokaDate" class="date-input hidden-date">
           </div>
           <span class="countdown-days-wrap" onclick="openDatePicker('fukuokaDate')">
@@ -457,7 +457,7 @@
   <script>
     // ==================== 可修改區域 ====================
     const SCHOOL_DATE  = new Date(2026, 8, 1);
-    const FUKUOKA_DATE = new Date(2026, 10, 15);
+    const FUKUOKA_DATE = new Date(2026, 7, 21);
     const GOOGLE_CAL_PROXY_URL = 'https://script.google.com/macros/s/AKfycbyqnIfhXlTiMBPE7Rxk4sE1g58BdX1wTNl9eCafjn0XsNxjeP4G0eejLw8FazUf3YYW/exec';
 
     // ==================== NR824 / NR823 規則 ====================
@@ -617,7 +617,7 @@
         document.getElementById('schoolDate').value = '2026-09-01';
       }
       if (!document.getElementById('fukuokaDate').value) {
-        document.getElementById('fukuokaDate').value = '2026-11-15';
+        document.getElementById('fukuokaDate').value = '2026-08-21';
       }
       updateCountdownDisplay();
     }
