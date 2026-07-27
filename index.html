@@ -115,6 +115,13 @@
       color: var(--muted);
       margin-top: 4px;
     }
+    .cal-clock {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
     .cal-right {
       flex: 1;
     }
@@ -129,7 +136,7 @@
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
+      gap: 1px 0;
       text-align: center;
       font-size: 0.72rem;
     }
@@ -191,8 +198,8 @@
     }
 
     /* ===== Shuttle ===== */
-    .shuttle-block { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--panel-border); }
-    .shuttle-block:last-of-type { margin-bottom: 4px; padding-bottom: 0; border-bottom: none; }
+    .shuttle-block { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed var(--panel-border); }
+    .shuttle-block:last-of-type { margin-bottom: 2px; padding-bottom: 0; border-bottom: none; }
     .panel h2 {
       font-size: 0.65rem; font-weight: 600; color: var(--muted);
       text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px;
@@ -208,11 +215,12 @@
       font-size: 2.05rem; font-weight: 700; line-height: 1.05; margin: 1px 0 2px;
       color: var(--blue);
     }
-    .next-time.small { font-size: 1.75rem; color: var(--green); }
+    #next823 { color: var(--green); }
     .next-sub { font-size: 0.78rem; color: var(--muted); }
     .route {
-      font-size: 0.85rem; font-weight: 600;
-      text-align: right; max-width: 140px; line-height: 1.25;
+      font-size: 0.82rem; font-weight: 600;
+      text-align: right; white-space: nowrap;
+      flex-shrink: 0;
     }
     .updated { font-size: 0.65rem; color: var(--light-muted); margin-top: 6px; }
     .refresh-btn {
@@ -237,19 +245,61 @@
 
     /* ===== Countdown ===== */
     .countdown-row {
-      display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
     }
+    .countdown-left { display: flex; flex-direction: column; gap: 2px; }
     .countdown-label { font-size: 0.88rem; font-weight: 500; }
     .countdown-days { font-size: 1.7rem; font-weight: 700; color: var(--orange); }
     .countdown-unit { font-size: 0.78rem; color: var(--muted); margin-left: 2px; }
+    .date-input.hidden-date {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+    .countdown-days-wrap {
+      cursor: pointer;
+      border-bottom: 1px dashed transparent;
+    }
+    .countdown-days-wrap:hover {
+      border-bottom-color: var(--orange);
+    }
 
     /* ===== Weather ===== */
-    .weather-main { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .weather-main { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .weather-icon-big { font-size: 2.4rem; line-height: 1; }
     .temp { font-size: 2.3rem; font-weight: 700; color: var(--blue); }
+    .weather-warning {
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-top: 6px;
+      line-height: 1.3;
+      display: none;
+    }
+    .weather-warning.show { display: block; }
     .weather-details {
       font-size: 0.8rem; color: var(--muted);
       display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px;
     }
+    .forecast-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--panel-border);
+      overflow-x: auto;
+    }
+    .forecast-day {
+      flex: 1;
+      min-width: 52px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .forecast-day .fd-week { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .forecast-day .fd-temp { font-weight: 600; color: var(--blue); margin-top: 2px; }
+    .forecast-day .fd-icon { font-size: 0.85rem; margin: 2px 0; }
 
     .note {
       grid-column: 1 / -1; padding: 10px 18px; font-size: 0.68rem;
@@ -277,8 +327,7 @@
       /* Shuttle */
       .shuttle-row { gap: 8px; }
       .next-time { font-size: 1.85rem; }
-      .next-time.small { font-size: 1.55rem; }
-      .route { font-size: 0.8rem; max-width: 130px; }
+      .route { font-size: 0.78rem; }
 
       /* Countdown & Weather */
       .countdown-days { font-size: 1.5rem; }
@@ -289,8 +338,7 @@
     @media (max-width: 400px) {
       .cal-daynum { font-size: 2.2rem; }
       .next-time { font-size: 1.7rem; }
-      .next-time.small { font-size: 1.4rem; }
-      .route { max-width: 110px; font-size: 0.75rem; }
+      .route { font-size: 0.72rem; }
       .cal-grid .day { width: 24px; height: 24px; font-size: 0.7rem; }
       .meta { gap: 8px; font-size: 0.8rem; }
     }
@@ -298,8 +346,7 @@
     @media (min-width: 721px) and (max-width: 900px) {
       .grid { grid-template-columns: 1.1fr 1fr; }
       .next-time { font-size: 1.9rem; }
-      .next-time.small { font-size: 1.6rem; }
-      .route { font-size: 0.8rem; max-width: 120px; }
+      .route { font-size: 0.78rem; }
     }
   </style>
 </head>
@@ -308,9 +355,7 @@
     <header>
       <h1>FAMILY DASHBOARD</h1>
       <div class="meta">
-        <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">深色</button>
-        <div>🔋 <span id="battery">—</span></div>
-        <div id="date">--.--.----</div>
+        <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()" title="切換深色/淺色">🌙</button>
       </div>
     </header>
 
@@ -322,6 +367,7 @@
             <div class="cal-weekday" id="calWeekday">—</div>
             <div class="cal-daynum" id="calDayNum">—</div>
             <div class="cal-events-preview" id="calPreview">Loading...</div>
+            <div class="cal-clock" id="calClock">--:--</div>
           </div>
           <div class="cal-right">
             <div class="cal-month" id="calMonth">—</div>
@@ -337,7 +383,51 @@
         </div>
       </div>
 
-      <!-- NEXT SHUTTLE -->
+      <!-- WEATHER (swapped to top-right) -->
+      <div class="panel">
+        <h2>TODAY WEATHER · 香港天文台 <button class="refresh-btn" onclick="updateWeather()" title="手動更新">↻</button></h2>
+        <div class="weather-main">
+          <div class="weather-icon-big" id="weatherIcon">🌤️</div>
+          <div class="temp" id="temp">--°</div>
+          <div>
+            <div id="weatherDesc">Loading...</div>
+            <div style="font-size:0.78rem;color:var(--muted);" id="feels">沙田 / 更新中</div>
+          </div>
+        </div>
+        <div class="weather-details">
+          <div>💧 濕度 <span id="humidity">--%</span></div>
+          <div>☀️ UV <span id="uv">--</span></div>
+          <div>🌧️ 雨量 <span id="rain">-- mm</span></div>
+          <div>🕐 <span id="wxUpdate">--</span></div>
+        </div>
+        <div class="weather-warning" id="weatherWarning"></div>
+        <div class="forecast-row" id="forecastRow"></div>
+      </div>
+
+      <!-- COUNTDOWNS -->
+      <div class="panel">
+        <h2>COUNTDOWNS</h2>
+        <div class="countdown-row">
+          <div class="countdown-left">
+            <span class="countdown-label" contenteditable="true" id="schoolLabel">BACK TO SCHOOL</span>
+            <input type="date" id="schoolDate" class="date-input hidden-date">
+          </div>
+          <span class="countdown-days-wrap" onclick="openDatePicker('schoolDate')">
+            <span class="countdown-days" id="schoolDays">--</span><span class="countdown-unit">DAYS</span>
+          </span>
+        </div>
+        <div class="countdown-row">
+          <div class="countdown-left">
+            <span class="countdown-label" contenteditable="true" id="fukuokaLabel">FUKUOKA TRIP</span>
+            <input type="date" id="fukuokaDate" class="date-input hidden-date">
+          </div>
+          <span class="countdown-days-wrap" onclick="openDatePicker('fukuokaDate')">
+            <span class="countdown-days" id="fukuokaDays">--</span><span class="countdown-unit">DAYS</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- NEXT SHUTTLE (moved to bottom-right) -->
       <div class="panel">
         <div class="shuttle-block">
           <h2>NEXT SHUTTLE · NR824</h2>
@@ -353,44 +443,13 @@
           <h2>NEXT SHUTTLE · NR823</h2>
           <div class="shuttle-row">
             <div>
-              <div class="next-time small" id="next823">--:--</div>
+              <div class="next-time" id="next823">--:--</div>
               <div class="next-sub" id="range823">Then --:--</div>
             </div>
             <div class="route">聽濤雅苑 → 鑽石山站</div>
           </div>
         </div>
         <div class="updated" id="updated">Updated --:--</div>
-      </div>
-
-      <!-- COUNTDOWNS -->
-      <div class="panel">
-        <h2>COUNTDOWNS <span style="font-weight:400;font-size:0.7em;text-transform:none;">(點擊可編輯)</span></h2>
-        <div class="countdown-row">
-          <span class="countdown-label" contenteditable="true" id="schoolLabel">BACK TO SCHOOL</span>
-          <span><span class="countdown-days" contenteditable="true" id="schoolDays">--</span><span class="countdown-unit">DAYS</span></span>
-        </div>
-        <div class="countdown-row">
-          <span class="countdown-label" contenteditable="true" id="fukuokaLabel">FUKUOKA TRIP</span>
-          <span><span class="countdown-days" contenteditable="true" id="fukuokaDays">--</span><span class="countdown-unit">DAYS</span></span>
-        </div>
-      </div>
-
-      <!-- WEATHER -->
-      <div class="panel">
-        <h2>TODAY WEATHER · 香港天文台 <button class="refresh-btn" onclick="updateWeather()" title="手動更新">↻</button></h2>
-        <div class="weather-main">
-          <div class="temp" id="temp">--°</div>
-          <div>
-            <div id="weatherDesc">Loading...</div>
-            <div style="font-size:0.78rem;color:var(--muted);" id="feels">沙田 / 更新中</div>
-          </div>
-        </div>
-        <div class="weather-details">
-          <div>濕度 <span id="humidity">--%</span></div>
-          <div>UV <span id="uv">--</span></div>
-          <div>沙田雨量 <span id="rain">-- mm</span></div>
-          <div>更新 <span id="wxUpdate">--</span></div>
-        </div>
       </div>
     </div>
   </div>
@@ -433,12 +492,12 @@
       try {
         localStorage.setItem('dashboard-theme', isDark ? 'dark' : 'light');
       } catch (e) {}
-      document.getElementById('themeBtn').textContent = isDark ? '淺色' : '深色';
+      document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
     }
     try {
       if (localStorage.getItem('dashboard-theme') === 'dark') {
         document.body.classList.add('dark');
-        document.getElementById('themeBtn').textContent = '淺色';
+        document.getElementById('themeBtn').textContent = '☀️';
       }
     } catch (e) {}
 
@@ -537,56 +596,91 @@
         'Updated ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
-    // ==================== 倒數 & 日期 ====================
+    // ==================== 倒數 & 日期 & 時鐘 ====================
+    function daysUntil(dateStr) {
+      if (!dateStr) return '--';
+      const target = new Date(dateStr + 'T00:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = Math.ceil((target - today) / 86400000);
+      return diff < 0 ? 0 : diff;
+    }
     function loadCountdowns() {
       try {
         const saved = JSON.parse(localStorage.getItem('dashboard-countdowns') || '{}');
         if (saved.schoolLabel) document.getElementById('schoolLabel').textContent = saved.schoolLabel;
         if (saved.fukuokaLabel) document.getElementById('fukuokaLabel').textContent = saved.fukuokaLabel;
-        if (saved.schoolDays !== undefined) document.getElementById('schoolDays').textContent = saved.schoolDays;
-        if (saved.fukuokaDays !== undefined) document.getElementById('fukuokaDays').textContent = saved.fukuokaDays;
+        if (saved.schoolDate) document.getElementById('schoolDate').value = saved.schoolDate;
+        if (saved.fukuokaDate) document.getElementById('fukuokaDate').value = saved.fukuokaDate;
       } catch(e) {}
+      // default dates if empty
+      if (!document.getElementById('schoolDate').value) {
+        document.getElementById('schoolDate').value = '2026-09-01';
+      }
+      if (!document.getElementById('fukuokaDate').value) {
+        document.getElementById('fukuokaDate').value = '2026-11-15';
+      }
+      updateCountdownDisplay();
     }
     function saveCountdowns() {
       try {
         const data = {
           schoolLabel: document.getElementById('schoolLabel').textContent.trim(),
           fukuokaLabel: document.getElementById('fukuokaLabel').textContent.trim(),
-          schoolDays: document.getElementById('schoolDays').textContent.trim(),
-          fukuokaDays: document.getElementById('fukuokaDays').textContent.trim()
+          schoolDate: document.getElementById('schoolDate').value,
+          fukuokaDate: document.getElementById('fukuokaDate').value
         };
         localStorage.setItem('dashboard-countdowns', JSON.stringify(data));
       } catch(e) {}
+      updateCountdownDisplay();
     }
-    function updateCountdowns() {
-      // 如果使用者已經手動編輯過，就不要覆蓋
-      try {
-        if (localStorage.getItem('dashboard-countdowns')) return;
-      } catch(e) {}
-      const today = new Date(); today.setHours(0,0,0,0);
-      document.getElementById('schoolDays').textContent = Math.max(0, Math.ceil((SCHOOL_DATE - today) / 86400000));
-      document.getElementById('fukuokaDays').textContent = Math.max(0, Math.ceil((FUKUOKA_DATE - today) / 86400000));
+    function updateCountdownDisplay() {
+      const schoolDays = daysUntil(document.getElementById('schoolDate').value);
+      const fukuokaDays = daysUntil(document.getElementById('fukuokaDate').value);
+      document.getElementById('schoolDays').textContent = schoolDays;
+      document.getElementById('fukuokaDays').textContent = fukuokaDays;
+
+      // 剩餘天數少的排上面
+      const schoolRow = document.getElementById('schoolDays').closest('.countdown-row');
+      const fukuokaRow = document.getElementById('fukuokaDays').closest('.countdown-row');
+      if (!schoolRow || !fukuokaRow) return;
+      const parent = schoolRow.parentNode;
+      const sDays = parseInt(schoolDays, 10);
+      const fDays = parseInt(fukuokaDays, 10);
+      if (isNaN(sDays) || isNaN(fDays)) return;
+      if (fDays < sDays) {
+        parent.insertBefore(fukuokaRow, schoolRow);
+      } else {
+        parent.insertBefore(schoolRow, fukuokaRow);
+      }
     }
-    // 監聽手動編輯
-    ['schoolLabel','fukuokaLabel','schoolDays','fukuokaDays'].forEach(id => {
+    // 監聽
+    ['schoolLabel','fukuokaLabel'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('blur', saveCountdowns);
         el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
       }
     });
-    function updateDate() {
-      const now = new Date();
-      document.getElementById('date').textContent =
-        String(now.getDate()).padStart(2,'0') + '.' +
-        String(now.getMonth()+1).padStart(2,'0') + '.' + now.getFullYear();
+    document.getElementById('schoolDate').addEventListener('change', saveCountdowns);
+    document.getElementById('fukuokaDate').addEventListener('change', saveCountdowns);
+    function openDatePicker(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      try {
+        if (typeof el.showPicker === 'function') el.showPicker();
+        else { el.style.opacity = '1'; el.style.position = 'static'; el.style.width = 'auto'; el.focus(); el.click(); }
+      } catch (e) {
+        el.focus();
+      }
     }
-    if (navigator.getBattery) {
-      navigator.getBattery().then(bat => {
-        const set = () => document.getElementById('battery').textContent = Math.round(bat.level*100) + '%';
-        set();
-        bat.addEventListener('levelchange', set);
-      });
+
+    function updateDate() {
+      // date display removed from header
+    }
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('calClock').textContent =
+        String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
     // ==================== 天氣 ====================
@@ -596,6 +690,23 @@
       65:'狂風雷暴',70:'晴夜',71:'大致良好',72:'大致良好',76:'大致多雲',
       77:'大致多雲',80:'強烈季候風',90:'熱',91:'暖',92:'涼',93:'冷'
     };
+    const HKO_EMOJI = {
+      50:'☀️',51:'🌤️',52:'⛅',53:'🌦️',54:'🌦️',
+      60:'☁️',61:'☁️',62:'🌧️',63:'🌧️',64:'⛈️',
+      65:'⛈️',70:'🌙',71:'🌤️',72:'🌤️',76:'☁️',
+      77:'☁️',80:'💨',90:'🔥',91:'🌡️',92:'❄️',93:'🥶'
+    };
+    function emojiFromText(text) {
+      if (!text) return '🌡️';
+      if (text.includes('雷')) return '⛈️';
+      if (text.includes('大雨') || text.includes('暴雨')) return '🌧️';
+      if (text.includes('雨')) return '🌦️';
+      if (text.includes('晴') || text.includes('陽')) return '☀️';
+      if (text.includes('雲')) return '☁️';
+      if (text.includes('霧')) return '🌫️';
+      if (text.includes('風')) return '💨';
+      return '🌡️';
+    }
     async function updateWeather() {
       try {
         const res = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc');
@@ -607,15 +718,51 @@
         document.getElementById('uv').textContent = uv ? `${uv.value} (${uv.desc})` : '—';
         const rain = data.rainfall?.data?.find(d => d.place === '沙田');
         document.getElementById('rain').textContent = (rain?.max ?? 0) + ' mm';
-        document.getElementById('weatherDesc').textContent = HKO_ICON[data.icon?.[0]] || ('Icon ' + data.icon?.[0]);
+        const iconCode = data.icon?.[0];
+        document.getElementById('weatherDesc').textContent = HKO_ICON[iconCode] || ('Icon ' + iconCode);
+        document.getElementById('weatherIcon').textContent = HKO_EMOJI[iconCode] || '🌤️';
         if (data.updateTime) {
           const t = new Date(data.updateTime);
           document.getElementById('wxUpdate').textContent =
             String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
         }
         document.getElementById('feels').textContent = '沙田 · 香港天文台';
+        // 警告
+        const warn = data.warningMessage;
+        const warnEl = document.getElementById('weatherWarning');
+        if (warn && warn.length) {
+          const msg = Array.isArray(warn) ? warn.join('；') : String(warn);
+          if (msg.trim()) {
+            warnEl.textContent = '⚠️ ' + msg;
+            warnEl.classList.add('show');
+          } else {
+            warnEl.classList.remove('show');
+          }
+        } else {
+          warnEl.classList.remove('show');
+        }
       } catch (e) {
         document.getElementById('weatherDesc').textContent = '天氣暫時無法更新';
+      }
+      // 未來幾天預報
+      try {
+        const res2 = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc');
+        const fnd = await res2.json();
+        const list = (fnd.weatherForecast || []).slice(0, 5);
+        const weekMap = { '星期一':'一','星期二':'二','星期三':'三','星期四':'四','星期五':'五','星期六':'六','星期日':'日' };
+        document.getElementById('forecastRow').innerHTML = list.map(d => {
+          const week = weekMap[d.week] || d.week?.slice(-1) || '';
+          const maxT = d.forecastMaxtemp?.value ?? '--';
+          const minT = d.forecastMintemp?.value ?? '--';
+          const emoji = HKO_EMOJI[d.ForecastIcon] || emojiFromText(d.forecastWeather);
+          return `<div class="forecast-day">
+            <div class="fd-week">${week}</div>
+            <div class="fd-icon" style="font-size:1.2rem">${emoji}</div>
+            <div class="fd-temp">${minT}~${maxT}°</div>
+          </div>`;
+        }).join('');
+      } catch (e) {
+        document.getElementById('forecastRow').innerHTML = '';
       }
     }
 
@@ -680,9 +827,9 @@
     // ==================== Init ====================
     renderCalendarWidget();
     updateDate();
+    updateClock();
     updateShuttles();
     loadCountdowns();
-    updateCountdowns();
     updateWeather();
     tryLoadCalendar();
     scheduleDailyRefresh();
@@ -690,9 +837,11 @@
     setInterval(() => {
       renderCalendarWidget();
       updateDate();
+      updateClock();
       updateShuttles();
-      updateCountdowns();
-    }, 60000);
+      updateCountdownDisplay();
+    }, 30000);
+    setInterval(updateClock, 1000);
     setInterval(updateWeather, 15 * 60 * 1000);
     setInterval(tryLoadCalendar, 30 * 60 * 1000);
   </script>
