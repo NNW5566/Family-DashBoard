@@ -812,14 +812,18 @@
       try {
         const res = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc');
         const data = await res.json();
-        const shatin = data.temperature?.data?.find(d => d.place === '沙田');
-        document.getElementById('temp').textContent = (shatin?.value ?? '--') + '°';
-        document.getElementById('humidity').textContent = (data.humidity?.data?.[0]?.value ?? '--') + '%';
-        const uv = data.uvindex?.data?.[0];
-        document.getElementById('uv').textContent = uv ? `${uv.value} (${uv.desc})` : '—';
-        const rain = data.rainfall?.data?.find(d => d.place === '沙田');
-        document.getElementById('rain').textContent = (rain?.max ?? 0) + ' mm';
-        const iconCode = data.icon?.[0];
+        const tempData = data.temperature && data.temperature.data ? data.temperature.data : [];
+        const shatin = tempData.find(function(d) { return d.place === '沙田'; });
+        document.getElementById('temp').textContent = (shatin && shatin.value != null ? shatin.value : '--') + '°';
+        const humData = data.humidity && data.humidity.data ? data.humidity.data : [];
+        document.getElementById('humidity').textContent = (humData[0] && humData[0].value != null ? humData[0].value : '--') + '%';
+        const uvData = data.uvindex && data.uvindex.data ? data.uvindex.data : [];
+        const uv = uvData[0];
+        document.getElementById('uv').textContent = uv ? (uv.value + ' (' + uv.desc + ')') : '--';
+        const rainData = data.rainfall && data.rainfall.data ? data.rainfall.data : [];
+        const rain = rainData.find(function(d) { return d.place === '沙田'; });
+        document.getElementById('rain').textContent = (rain && rain.max != null ? rain.max : 0) + ' mm';
+        const iconCode = data.icon && data.icon[0];
         document.getElementById('weatherDesc').textContent = HKO_ICON[iconCode] || ('Icon ' + iconCode);
         document.getElementById('weatherIcon').innerHTML = wxSvg(wxIconKey(iconCode));
         if (data.updateTime) {
@@ -850,9 +854,9 @@
         const list = (fnd.weatherForecast || []).slice(0, 5);
         const weekMap = { '星期一':'一','星期二':'二','星期三':'三','星期四':'四','星期五':'五','星期六':'六','星期日':'日' };
         document.getElementById('forecastRow').innerHTML = list.map(d => {
-          const week = weekMap[d.week] || d.week?.slice(-1) || '';
-          const maxT = d.forecastMaxtemp?.value ?? '--';
-          const minT = d.forecastMintemp?.value ?? '--';
+          const week = weekMap[d.week] || (d.week ? d.week.slice(-1) : '') || '';
+          const maxT = (d.forecastMaxtemp && d.forecastMaxtemp.value != null) ? d.forecastMaxtemp.value : '--';
+          const minT = (d.forecastMintemp && d.forecastMintemp.value != null) ? d.forecastMintemp.value : '--';
           const key = d.ForecastIcon ? wxIconKey(d.ForecastIcon) : wxIconFromText(d.forecastWeather);
           return `<div class="forecast-day">
             <div class="fd-week">${week}</div>
