@@ -390,10 +390,10 @@
       <div class="panel">
         <div class="cal-widget">
           <div class="cal-left">
-            <div class="cal-weekday" id="calWeekday">—</div>
-            <div class="cal-month" id="calMonth">—</div>
-            <div class="cal-daynum" id="calDayNum">—</div>
-            <div class="cal-events-preview" id="calPreview">Loading...</div>
+            <div class="cal-weekday" id="calWeekday">...</div>
+            <div class="cal-month" id="calMonth">...</div>
+            <div class="cal-daynum" id="calDayNum">-</div>
+            <div class="cal-events-preview" id="calPreview">...</div>
           </div>
           <div class="cal-right">
             <div class="cal-grid" id="calGrid"></div>
@@ -925,24 +925,48 @@
     }
 
     // ==================== Init ====================
-    renderCalendarWidget();
-    updateClock();
-    loadRoutes();
-    loadLock();
-    updateShuttles();
-    loadCountdowns();
-    updateWeather();
-    tryLoadCalendar();
-    scheduleDailyRefresh();
+    function showError(msg) {
+      var el = document.getElementById('jsError');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'jsError';
+        el.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#fee2e2;color:#991b1b;padding:10px 12px;border-radius:8px;font-size:12px;';
+        document.body.appendChild(el);
+      }
+      el.textContent = 'JS Error: ' + msg;
+    }
+    window.onerror = function(msg, src, line) {
+      showError(String(msg) + ' (line ' + line + ')');
+    };
 
-    setInterval(() => {
-      renderCalendarWidget();
-      updateShuttles();
-      renderCountdowns();
-    }, 30000);
-    setInterval(updateClock, 1000);
-    setInterval(updateWeather, 15 * 60 * 1000);
-    setInterval(tryLoadCalendar, 30 * 60 * 1000);
+    function boot() {
+      try {
+        renderCalendarWidget();
+        updateClock();
+        loadRoutes();
+        loadLock();
+        updateShuttles();
+        loadCountdowns();
+        updateWeather();
+        tryLoadCalendar();
+        scheduleDailyRefresh();
+        setInterval(function() {
+          renderCalendarWidget();
+          updateShuttles();
+          renderCountdowns();
+        }, 30000);
+        setInterval(updateClock, 1000);
+        setInterval(updateWeather, 15 * 60 * 1000);
+        setInterval(tryLoadCalendar, 30 * 60 * 1000);
+      } catch (e) {
+        showError(e && e.message ? e.message : String(e));
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
   </script>
 </body>
 </html>
