@@ -6,42 +6,42 @@
   <title>Family Dashboard</title>
   <style>
     :root {
-      --bg: #f0f2f5;
+      --bg: #eceef1;
       --frame-bg: #ffffff;
-      --frame-border: #e2e5eb;
+      --frame-border: #d8dce3;
       --text: #1c1c1e;
       --muted: #6b7280;
       --light-muted: #9ca3af;
-      --panel-border: #e5e7eb;
-      --header-bg: #fafbfc;
+      --panel-border: #e8eaed;
+      --header-bg: #f7f8fa;
       --note-bg: #f8fafc;
-      --accent: #ef4444;          /* 今日紅圈 */
-      --accent-soft: #fef2f2;
-      --blue: #3b82f6;
+      --accent: #e11d48;          /* 紅 = 今日 / 警告 */
+      --accent-soft: #fff1f2;
+      --blue: #2563eb;           /* 藍 = 班次 / 時間 */
       --blue-soft: #eff6ff;
-      --green: #10b981;
+      --green: #059669;          /* 綠 = NR823 */
       --green-soft: #ecfdf5;
-      --orange: #f59e0b;
-      --card-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --orange: #d97706;         /* 橙 = 倒數 */
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     body.dark {
-      --bg: #0f0f12;
-      --frame-bg: #1c1c1e;
-      --frame-border: #2c2c2e;
-      --text: #f5f5f7;
-      --muted: #a1a1aa;
-      --light-muted: #71717a;
-      --panel-border: #2c2c2e;
-      --header-bg: #232325;
-      --note-bg: #18181b;
-      --accent: #f87171;
-      --accent-soft: #3f1c1c;
+      --bg: #0c0c0e;
+      --frame-bg: #18181b;
+      --frame-border: #27272a;
+      --text: #f4f4f5;
+      --muted: #b4b4be;          /* 深色模式次要文字略亮 */
+      --light-muted: #8b8b96;
+      --panel-border: #27272a;
+      --header-bg: #1f1f23;
+      --note-bg: #141416;
+      --accent: #fb7185;
+      --accent-soft: #3f1c22;
       --blue: #60a5fa;
       --blue-soft: #1e3a5f;
       --green: #34d399;
       --green-soft: #064e3b;
       --orange: #fbbf24;
-      --card-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      --card-shadow: none;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -49,18 +49,29 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 14px;
+      padding: 12px;
       line-height: 1.35;
       transition: background 0.3s, color 0.3s;
+    }
+    body.locked {
+      background: #e4e6ea;
+    }
+    body.dark.locked {
+      background: #08080a;
     }
     .frame {
       max-width: 960px;
       margin: 0 auto;
       background: var(--frame-bg);
-      border: 6px solid var(--frame-border);
-      border-radius: 18px;
+      border: 3px solid var(--frame-border);
+      border-radius: 10px;
       box-shadow: var(--card-shadow);
       overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    body.locked .frame {
+      border-color: var(--muted);
+      opacity: 0.98;
     }
     header {
       display: flex;
@@ -97,37 +108,40 @@
       min-width: 90px;
     }
     .cal-weekday {
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 1.35rem;
+      font-weight: 700;
       color: var(--accent);
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      line-height: 1.15;
     }
     .cal-daynum {
-      font-size: 3.2rem;
+      font-size: 3.4rem;
       font-weight: 700;
       line-height: 1;
       margin: 2px 0 4px;
       color: var(--text);
     }
     .cal-events-preview {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
-      margin-top: 4px;
+      margin-top: 2px;
     }
-    .cal-clock {
-      font-size: 1.85rem;
-      font-weight: 700;
-      color: var(--blue);
-      margin-top: 8px;
+    .header-clock {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
       letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+      min-width: 3.2em;
+      text-align: right;
     }
     .cal-right {
       flex: 1;
     }
     .cal-month {
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: 700;
       color: var(--accent);
       text-align: right;
       margin-bottom: 6px;
@@ -198,11 +212,11 @@
     }
 
     /* ===== Shuttle ===== */
-    .shuttle-block { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed var(--panel-border); }
+    .shuttle-block { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--panel-border); }
     .shuttle-block:last-of-type { margin-bottom: 2px; padding-bottom: 0; border-bottom: none; }
     .panel h2 {
-      font-size: 0.65rem; font-weight: 600; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px;
+      font-size: 0.62rem; font-weight: 600; color: var(--light-muted);
+      text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 4px;
       display: flex; align-items: center; gap: 8px;
     }
     .shuttle-row {
@@ -212,16 +226,20 @@
       gap: 12px;
     }
     .next-time {
-      font-size: 2.05rem; font-weight: 700; line-height: 1.05; margin: 1px 0 2px;
+      font-size: 2.15rem; font-weight: 700; line-height: 1.05; margin: 1px 0 2px;
       color: var(--blue);
+      font-variant-numeric: tabular-nums;
     }
-    #next823 { color: var(--green); }
     .next-sub { font-size: 0.78rem; color: var(--muted); }
     .route {
       font-size: 0.82rem; font-weight: 600;
       text-align: right; white-space: nowrap;
       flex-shrink: 0;
+      cursor: pointer;
+      border-bottom: 1px dashed transparent;
+      user-select: none;
     }
+    .route:hover { border-bottom-color: var(--blue); color: var(--blue); }
     .updated { font-size: 0.65rem; color: var(--light-muted); margin-top: 6px; }
     .refresh-btn {
       background: none; border: 1px solid var(--panel-border); color: var(--muted);
@@ -248,9 +266,9 @@
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
     }
     .countdown-left { display: flex; flex-direction: column; gap: 2px; }
-    .countdown-label { font-size: 0.88rem; font-weight: 500; }
-    .countdown-days { font-size: 1.7rem; font-weight: 700; color: var(--orange); }
-    .countdown-unit { font-size: 0.78rem; color: var(--muted); margin-left: 2px; }
+    .countdown-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+    .countdown-days { font-size: 1.55rem; font-weight: 700; color: var(--orange); font-variant-numeric: tabular-nums; }
+    .countdown-unit { font-size: 0.72rem; color: var(--light-muted); margin-left: 2px; }
     .date-input.hidden-date {
       position: absolute;
       opacity: 0;
@@ -265,11 +283,28 @@
     .countdown-days-wrap:hover {
       border-bottom-color: var(--orange);
     }
+    .countdown-del {
+      background: none; border: none; color: var(--light-muted);
+      cursor: pointer; font-size: 0.85rem; padding: 0 4px;
+      line-height: 1;
+    }
+    .countdown-del:hover { color: var(--accent); }
+    body.locked .unlock-only { display: none !important; }
+    body.locked [contenteditable="true"] { pointer-events: none; border-bottom-color: transparent !important; }
+    body.locked .countdown-days-wrap { pointer-events: none; cursor: default; }
+    body.locked .route { pointer-events: none; cursor: default; border-bottom-color: transparent !important; }
+    body.locked .countdown-del { display: none !important; }
+    body.locked #lockBtn { opacity: 0.7; }
 
     /* ===== Weather ===== */
     .weather-main { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .weather-icon-big { font-size: 2.4rem; line-height: 1; }
-    .temp { font-size: 2.3rem; font-weight: 700; color: var(--blue); }
+    .weather-icon-big {
+      font-size: 1.9rem; line-height: 1;
+      width: 2.2em; height: 2.2em;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .temp { font-size: 1.85rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
     .weather-warning {
       font-size: 0.72rem;
       color: var(--accent);
@@ -298,8 +333,13 @@
       color: var(--muted);
     }
     .forecast-day .fd-week { font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .forecast-day .fd-temp { font-weight: 600; color: var(--blue); margin-top: 2px; }
-    .forecast-day .fd-icon { font-size: 0.85rem; margin: 2px 0; }
+    .forecast-day .fd-temp { font-weight: 600; color: var(--text); margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .forecast-day .fd-icon {
+      font-size: 1.15rem; margin: 3px 0;
+      width: 1.5em; height: 1.5em;
+      display: flex; align-items: center; justify-content: center;
+      margin-left: auto; margin-right: auto;
+    }
 
     .note {
       grid-column: 1 / -1; padding: 10px 18px; font-size: 0.68rem;
@@ -310,7 +350,7 @@
     /* ===== Responsive ===== */
     @media (max-width: 720px) {
       body { padding: 8px; }
-      .frame { border-width: 4px; border-radius: 14px; }
+      .frame { border-width: 2px; border-radius: 8px; }
       .grid { grid-template-columns: 1fr; }
       .panel:nth-child(odd) { border-right: none; }
       .panel { padding: 14px 14px; }
@@ -355,7 +395,9 @@
     <header>
       <h1>FAMILY DASHBOARD</h1>
       <div class="meta">
-        <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()" title="切換深色/淺色">🌙</button>
+        <div class="header-clock" id="calClock">--:--</div>
+        <button class="toggle-btn unlock-only" id="themeBtn" onclick="toggleTheme()" title="切換深色/淺色">🌙</button>
+        <button class="toggle-btn" id="lockBtn" onclick="toggleLock()" title="鎖定/解鎖">🔓</button>
       </div>
     </header>
 
@@ -367,7 +409,6 @@
             <div class="cal-weekday" id="calWeekday">—</div>
             <div class="cal-daynum" id="calDayNum">—</div>
             <div class="cal-events-preview" id="calPreview">Loading...</div>
-            <div class="cal-clock" id="calClock">--:--</div>
           </div>
           <div class="cal-right">
             <div class="cal-month" id="calMonth">—</div>
@@ -379,13 +420,13 @@
         </div>
         <div class="cal-status">
           <span id="calStatus">同步中...</span>
-          <button class="refresh-btn" onclick="tryLoadCalendar()" title="手動更新日曆">↻</button>
+          <button class="refresh-btn unlock-only" onclick="tryLoadCalendar()" title="手動更新日曆">↻</button>
         </div>
       </div>
 
       <!-- WEATHER (swapped to top-right) -->
       <div class="panel">
-        <h2>TODAY WEATHER · 香港天文台 <button class="refresh-btn" onclick="updateWeather()" title="手動更新">↻</button></h2>
+        <h2>TODAY WEATHER · 香港天文台 <button class="refresh-btn unlock-only" onclick="updateWeather()" title="手動更新">↻</button></h2>
         <div class="weather-main">
           <div class="weather-icon-big" id="weatherIcon">🌤️</div>
           <div class="temp" id="temp">--°</div>
@@ -406,25 +447,8 @@
 
       <!-- COUNTDOWNS -->
       <div class="panel">
-        <h2>COUNTDOWNS</h2>
-        <div class="countdown-row">
-          <div class="countdown-left">
-            <span class="countdown-label" contenteditable="true" id="schoolLabel">BACK TO SCHOOL</span>
-            <input type="date" id="schoolDate" class="date-input hidden-date">
-          </div>
-          <span class="countdown-days-wrap" onclick="openDatePicker('schoolDate')">
-            <span class="countdown-days" id="schoolDays">--</span><span class="countdown-unit">DAYS</span>
-          </span>
-        </div>
-        <div class="countdown-row">
-          <div class="countdown-left">
-            <span class="countdown-label" contenteditable="true" id="fukuokaLabel">INFLIXIMAB</span>
-            <input type="date" id="fukuokaDate" class="date-input hidden-date">
-          </div>
-          <span class="countdown-days-wrap" onclick="openDatePicker('fukuokaDate')">
-            <span class="countdown-days" id="fukuokaDays">--</span><span class="countdown-unit">DAYS</span>
-          </span>
-        </div>
+        <h2>COUNTDOWNS <button class="refresh-btn unlock-only" onclick="addCountdown()" title="新增">+</button></h2>
+        <div id="countdownList"></div>
       </div>
 
       <!-- NEXT SHUTTLE (moved to bottom-right) -->
@@ -436,7 +460,7 @@
               <div class="next-time" id="next824">--:--</div>
               <div class="next-sub" id="range824">Then --:--</div>
             </div>
-            <div class="route">聽濤雅苑 → 馬鞍山廣場</div>
+            <div class="route" id="route824" onclick="toggleRoute('824')" title="點擊切換方向">聽濤雅苑 → 馬鞍山廣場</div>
           </div>
         </div>
         <div class="shuttle-block">
@@ -446,7 +470,7 @@
               <div class="next-time" id="next823">--:--</div>
               <div class="next-sub" id="range823">Then --:--</div>
             </div>
-            <div class="route">聽濤雅苑 → 鑽石山站</div>
+            <div class="route" id="route823" onclick="toggleRoute('823')" title="點擊切換方向">聽濤雅苑 → 鑽石山站</div>
           </div>
         </div>
         <div class="updated" id="updated">Updated --:--</div>
@@ -580,23 +604,101 @@
         document.getElementById(rangeId).textContent = 'Last bus';
       }
     }
+    // 方向：0 = 由聽濤雅苑開出，1 = 回程（對端開出，用車程偏移估算）
+    // 官方時間表只列出屋苑開出；回程按循環線車程推算
+    const ROUTE_LABELS = {
+      '824': ['聽濤雅苑 → 馬鞍山廣場', '馬鞍山廣場 → 聽濤雅苑'],
+      '823': ['聽濤雅苑 → 鑽石山站', '鑽石山站 → 聽濤雅苑']
+    };
+    const ROUTE_OFFSET = { '824': 12, '823': 20 }; // 單程約略分鐘數
+    let routeDir = { '824': 0, '823': 0 };
+
+    function getNextFromRulesWithOffset(rules, offsetMin) {
+      const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+      const base = generateDepartures(rules);
+      // 回程：每班由屋苑開出後，約 offset 分鐘到達對端再開出（循環）
+      const shifted = base.map(t => {
+        let mins = t.h * 60 + t.m + offsetMin;
+        if (mins >= 24 * 60) mins -= 24 * 60;
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return { h, m, str: String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') };
+      }).sort((a,b) => (a.h*60+a.m) - (b.h*60+b.m));
+      const upcoming = shifted.filter(t => (t.h*60 + t.m) > nowMins);
+      return { next: upcoming[0] || null, following: upcoming.slice(1, 3) };
+    }
+
+    function toggleRoute(id) {
+      routeDir[id] = routeDir[id] === 0 ? 1 : 0;
+      const el = document.getElementById('route' + id);
+      if (el) el.textContent = ROUTE_LABELS[id][routeDir[id]];
+      try {
+        localStorage.setItem('dashboard-routes', JSON.stringify(routeDir));
+      } catch (e) {}
+      updateShuttles(); // 立即重算時間
+    }
+    function loadRoutes() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('dashboard-routes') || '{}');
+        if (saved['824'] === 0 || saved['824'] === 1) routeDir['824'] = saved['824'];
+        if (saved['823'] === 0 || saved['823'] === 1) routeDir['823'] = saved['823'];
+      } catch (e) {}
+      const el824 = document.getElementById('route824');
+      const el823 = document.getElementById('route823');
+      if (el824) el824.textContent = ROUTE_LABELS['824'][routeDir['824']];
+      if (el823) el823.textContent = ROUTE_LABELS['823'][routeDir['823']];
+    }
     function updateShuttles() {
       const day = new Date().getDay();
-      renderShuttle('next824', 'range824', getNextFromRules(nr824Rules));
-      if (day === 0) {
-        document.getElementById('next823').textContent = '無服務';
-        document.getElementById('range823').textContent = '星期日不設服務';
-      } else if (day === 6) {
-        renderShuttle('next823', 'range823', getNextFromRules(nr823Saturday));
+      // NR824
+      if (routeDir['824'] === 0) {
+        renderShuttle('next824', 'range824', getNextFromRules(nr824Rules));
       } else {
-        renderShuttle('next823', 'range823', getNextFromRules(nr823Weekday));
+        renderShuttle('next824', 'range824', getNextFromRulesWithOffset(nr824Rules, ROUTE_OFFSET['824']));
+      }
+      // NR823：星期日及公眾假期不設服務
+      if (isNr823NoService()) {
+        document.getElementById('next823').textContent = '無服務';
+        document.getElementById('range823').textContent = day === 0 ? '星期日不設服務' : '公眾假期不設服務';
+      } else {
+        const rules823 = day === 6 ? nr823Saturday : nr823Weekday;
+        if (routeDir['823'] === 0) {
+          renderShuttle('next823', 'range823', getNextFromRules(rules823));
+        } else {
+          renderShuttle('next823', 'range823', getNextFromRulesWithOffset(rules823, ROUTE_OFFSET['823']));
+        }
       }
       const now = new Date();
       document.getElementById('updated').textContent =
         'Updated ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
-    // ==================== 倒數 & 日期 & 時鐘 ====================
+    // ==================== 香港公眾假期 2026（政府憲報） ====================
+    const HK_HOLIDAYS_2026 = [
+      '2026-01-01','2026-02-17','2026-02-18','2026-02-19',
+      '2026-04-03','2026-04-04','2026-04-06','2026-04-07',
+      '2026-05-01','2026-05-25','2026-06-19','2026-07-01',
+      '2026-09-26','2026-10-01','2026-10-19','2026-12-25','2026-12-26'
+    ];
+    function localDateKey(d) {
+      return d.getFullYear() + '-' +
+        String(d.getMonth()+1).padStart(2,'0') + '-' +
+        String(d.getDate()).padStart(2,'0');
+    }
+    function isPublicHoliday(d) {
+      return HK_HOLIDAYS_2026.includes(localDateKey(d || new Date()));
+    }
+    function isNr823NoService(d) {
+      d = d || new Date();
+      return d.getDay() === 0 || isPublicHoliday(d);
+    }
+
+    // ==================== 倒數（可增刪，最多 4 項） ====================
+    const MAX_COUNTDOWNS = 4;
+    let countdowns = [
+      { id: 'c1', label: 'BACK TO SCHOOL', date: '2026-09-01' },
+      { id: 'c2', label: 'INFLIXIMAB', date: '2026-08-21' }
+    ];
     function daysUntil(dateStr) {
       if (!dateStr) return '--';
       const target = new Date(dateStr + 'T00:00:00');
@@ -606,72 +708,100 @@
     }
     function loadCountdowns() {
       try {
-        const saved = JSON.parse(localStorage.getItem('dashboard-countdowns') || '{}');
-        if (saved.schoolLabel) document.getElementById('schoolLabel').textContent = saved.schoolLabel;
-        if (saved.fukuokaLabel) document.getElementById('fukuokaLabel').textContent = saved.fukuokaLabel;
-        if (saved.schoolDate) document.getElementById('schoolDate').value = saved.schoolDate;
-        if (saved.fukuokaDate) document.getElementById('fukuokaDate').value = saved.fukuokaDate;
+        const saved = JSON.parse(localStorage.getItem('dashboard-countdowns-v2') || 'null');
+        if (Array.isArray(saved) && saved.length) countdowns = saved;
       } catch(e) {}
-      // default dates if empty
-      if (!document.getElementById('schoolDate').value) {
-        document.getElementById('schoolDate').value = '2026-09-01';
-      }
-      if (!document.getElementById('fukuokaDate').value) {
-        document.getElementById('fukuokaDate').value = '2026-08-21';
-      }
-      updateCountdownDisplay();
+      renderCountdowns();
     }
     function saveCountdowns() {
       try {
-        const data = {
-          schoolLabel: document.getElementById('schoolLabel').textContent.trim(),
-          fukuokaLabel: document.getElementById('fukuokaLabel').textContent.trim(),
-          schoolDate: document.getElementById('schoolDate').value,
-          fukuokaDate: document.getElementById('fukuokaDate').value
-        };
-        localStorage.setItem('dashboard-countdowns', JSON.stringify(data));
+        localStorage.setItem('dashboard-countdowns-v2', JSON.stringify(countdowns));
       } catch(e) {}
-      updateCountdownDisplay();
+    }
+    function renderCountdowns() {
+      // 按剩餘天數排序（少的在上）
+      const sorted = [...countdowns].sort((a, b) => {
+        const da = daysUntil(a.date), db = daysUntil(b.date);
+        return (typeof da === 'number' ? da : 9999) - (typeof db === 'number' ? db : 9999);
+      });
+      const list = document.getElementById('countdownList');
+      list.innerHTML = sorted.map(item => {
+        const days = daysUntil(item.date);
+        return `<div class="countdown-row" data-id="${item.id}">
+          <div class="countdown-left">
+            <span class="countdown-label" contenteditable="true" data-id="${item.id}">${item.label}</span>
+            <input type="date" class="date-input hidden-date" data-id="${item.id}" value="${item.date || ''}">
+          </div>
+          <span style="display:flex;align-items:center;gap:4px;">
+            <span class="countdown-days-wrap" data-id="${item.id}">
+              <span class="countdown-days">${days}</span><span class="countdown-unit">DAYS</span>
+            </span>
+            <button class="countdown-del unlock-only" data-id="${item.id}" title="刪除">×</button>
+          </span>
+        </div>`;
+      }).join('');
+      // 綁定事件
+      list.querySelectorAll('.countdown-label').forEach(el => {
+        el.addEventListener('blur', () => {
+          const id = el.dataset.id;
+          const item = countdowns.find(c => c.id === id);
+          if (item) { item.label = el.textContent.trim() || 'EVENT'; saveCountdowns(); }
+        });
+        el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+      });
+      list.querySelectorAll('.date-input').forEach(el => {
+        el.addEventListener('change', () => {
+          const id = el.dataset.id;
+          const item = countdowns.find(c => c.id === id);
+          if (item) { item.date = el.value; saveCountdowns(); renderCountdowns(); }
+        });
+      });
+      list.querySelectorAll('.countdown-days-wrap').forEach(el => {
+        el.addEventListener('click', () => {
+          if (document.body.classList.contains('locked')) return;
+          const input = list.querySelector(`.date-input[data-id="${el.dataset.id}"]`);
+          if (!input) return;
+          try {
+            if (typeof input.showPicker === 'function') input.showPicker();
+            else input.click();
+          } catch(e) { input.focus(); }
+        });
+      });
+      list.querySelectorAll('.countdown-del').forEach(el => {
+        el.addEventListener('click', () => {
+          if (countdowns.length <= 1) return;
+          countdowns = countdowns.filter(c => c.id !== el.dataset.id);
+          saveCountdowns();
+          renderCountdowns();
+        });
+      });
+    }
+    function addCountdown() {
+      if (document.body.classList.contains('locked')) return;
+      if (countdowns.length >= MAX_COUNTDOWNS) return;
+      const id = 'c' + Date.now();
+      countdowns.push({ id, label: 'NEW EVENT', date: '' });
+      saveCountdowns();
+      renderCountdowns();
     }
     function updateCountdownDisplay() {
-      const schoolDays = daysUntil(document.getElementById('schoolDate').value);
-      const fukuokaDays = daysUntil(document.getElementById('fukuokaDate').value);
-      document.getElementById('schoolDays').textContent = schoolDays;
-      document.getElementById('fukuokaDays').textContent = fukuokaDays;
-
-      // 剩餘天數少的排上面
-      const schoolRow = document.getElementById('schoolDays').closest('.countdown-row');
-      const fukuokaRow = document.getElementById('fukuokaDays').closest('.countdown-row');
-      if (!schoolRow || !fukuokaRow) return;
-      const parent = schoolRow.parentNode;
-      const sDays = parseInt(schoolDays, 10);
-      const fDays = parseInt(fukuokaDays, 10);
-      if (isNaN(sDays) || isNaN(fDays)) return;
-      if (fDays < sDays) {
-        parent.insertBefore(fukuokaRow, schoolRow);
-      } else {
-        parent.insertBefore(schoolRow, fukuokaRow);
-      }
+      renderCountdowns();
     }
-    // 監聽
-    ['schoolLabel','fukuokaLabel'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('blur', saveCountdowns);
-        el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
-      }
-    });
-    document.getElementById('schoolDate').addEventListener('change', saveCountdowns);
-    document.getElementById('fukuokaDate').addEventListener('change', saveCountdowns);
-    function openDatePicker(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
+
+    // ==================== 鎖定模式 ====================
+    function toggleLock() {
+      document.body.classList.toggle('locked');
+      const locked = document.body.classList.contains('locked');
+      document.getElementById('lockBtn').textContent = locked ? '🔒' : '🔓';
+      try { localStorage.setItem('dashboard-locked', locked ? '1' : '0'); } catch(e) {}
+    }
+    function loadLock() {
       try {
-        if (typeof el.showPicker === 'function') el.showPicker();
-        else { el.style.opacity = '1'; el.style.position = 'static'; el.style.width = 'auto'; el.focus(); el.click(); }
-      } catch (e) {
-        el.focus();
-      }
+        if (localStorage.getItem('dashboard-locked') === '1') {
+          document.body.classList.add('locked');
+          document.getElementById('lockBtn').textContent = '🔒';
+        }
+      } catch(e) {}
     }
 
     function updateDate() {
@@ -828,6 +958,8 @@
     renderCalendarWidget();
     updateDate();
     updateClock();
+    loadRoutes();
+    loadLock();
     updateShuttles();
     loadCountdowns();
     updateWeather();
