@@ -376,6 +376,17 @@
   </style>
 </head>
 <body>
+  <script>
+    window.__jsProbe = true;
+    window.onerror = function(msg, src, line, col, err) {
+      var d = document.createElement('div');
+      d.id = 'jsError';
+      d.setAttribute('style', 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#fee2e2;color:#991b1b;padding:12px;border-radius:8px;font-size:13px;font-family:sans-serif;');
+      d.textContent = 'JS Error: ' + msg + ' @' + line + ':' + (col||'?');
+      document.body.appendChild(d);
+      return false;
+    };
+  </script>
   <div class="frame">
     <header>
       <h1>FAMILY DASHBOARD</h1>
@@ -460,10 +471,8 @@
   </div>
 
   <script>
-    // ==================== 可修改區域 ====================
     const GOOGLE_CAL_PROXY_URL = 'https://script.google.com/macros/s/AKfycbyqnIfhXlTiMBPE7Rxk4sE1g58BdX1wTNl9eCafjn0XsNxjeP4G0eejLw8FazUf3YYW/exec';
 
-    // ==================== NR824 / NR823 規則 ====================
     const nr824Rules = [
       { start: [7,30], end: [9,30], interval: 20 },
       { start: [9,30], end: [13,0], interval: 30 },
@@ -488,7 +497,6 @@
       { start: [16,0], end: [20,0], interval: 30 }
     ];
 
-    // ==================== 主題 ====================
     function toggleTheme() {
       document.body.classList.toggle('dark');
       const isDark = document.body.classList.contains('dark');
@@ -504,7 +512,6 @@
       }
     } catch (e) {}
 
-    // ==================== 日曆 Widget ====================
     const WEEKDAYS = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
     const MONTHS = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
     const DOW = ['S','M','T','W','T','F','S'];
@@ -520,23 +527,19 @@
       document.getElementById('calDayNum').textContent = d;
       document.getElementById('calMonth').textContent = MONTHS[m];
 
-      // Mini month grid
       const firstDay = new Date(y, m, 1).getDay(); // 0=Sun
       const daysInMonth = new Date(y, m + 1, 0).getDate();
       const prevDays = new Date(y, m, 0).getDate();
 
       let html = DOW.map(d => `<div class="dow">${d}</div>`).join('');
 
-      // previous month padding
       for (let i = firstDay - 1; i >= 0; i--) {
         html += `<div class="day other">${prevDays - i}</div>`;
       }
-      // current month
       for (let i = 1; i <= daysInMonth; i++) {
         const cls = i === d ? 'day today' : 'day';
         html += `<div class="${cls}">${i}</div>`;
       }
-      // next month padding to fill 6 rows if needed
       const totalCells = firstDay + daysInMonth;
       const remaining = (7 - (totalCells % 7)) % 7;
       for (let i = 1; i <= remaining; i++) {
@@ -546,7 +549,6 @@
       document.getElementById('calGrid').innerHTML = html;
     }
 
-    // ==================== 班次計算 ====================
     function timeToMinutes(h, m) { return h * 60 + m; }
     function generateDepartures(rules) {
       const times = [];
@@ -591,7 +593,6 @@
         document.getElementById(rangeId).textContent = 'Last bus';
       }
     }
-    // 方向 0=屋苑開出，1=回程（車程偏移估算）
     const ROUTE_LABELS = {
       '824': ['聽濤雅苑 → 馬鞍山廣場', '馬鞍山廣場 → 聽濤雅苑'],
       '823': ['聽濤雅苑 → 鑽石山站', '鑽石山站 → 聽濤雅苑']
@@ -606,7 +607,7 @@
       try {
         localStorage.setItem('dashboard-routes', JSON.stringify(routeDir));
       } catch (e) {}
-      updateShuttles(); // 立即重算時間
+      updateShuttles();
     }
     function loadRoutes() {
       try {
@@ -636,7 +637,6 @@
         'Updated ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
-    // ==================== 香港公眾假期 2026（政府憲報） ====================
     const HK_HOLIDAYS_2026 = [
       '2026-01-01','2026-02-17','2026-02-18','2026-02-19',
       '2026-04-03','2026-04-04','2026-04-06','2026-04-07',
@@ -656,7 +656,6 @@
       return d.getDay() === 0 || isPublicHoliday(d);
     }
 
-    // ==================== 倒數（可增刪，最多 4 項） ====================
     const MAX_COUNTDOWNS = 4;
     let countdowns = [
       { id: 'c1', label: 'BACK TO SCHOOL', date: '2026-08-13' },
@@ -682,7 +681,6 @@
       } catch(e) {}
     }
     function renderCountdowns() {
-      // 按剩餘天數排序（少的在上）
       const sorted = [...countdowns].sort((a, b) => {
         const da = daysUntil(a.date), db = daysUntil(b.date);
         return (typeof da === 'number' ? da : 9999) - (typeof db === 'number' ? db : 9999);
@@ -703,7 +701,6 @@
           </span>
         </div>`;
       }).join('');
-      // 綁定事件
       list.querySelectorAll('.countdown-label').forEach(el => {
         el.addEventListener('blur', () => {
           const id = el.dataset.id;
@@ -748,7 +745,6 @@
       renderCountdowns();
     }
 
-    // ==================== 鎖定模式 ====================
     function toggleLock() {
       document.body.classList.toggle('locked');
       const locked = document.body.classList.contains('locked');
@@ -770,14 +766,12 @@
         String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
-    // ==================== 天氣 ====================
     const HKO_ICON = {
       50:'陽光充沛',51:'間中有陽光',52:'短暫陽光',53:'間中有陽光幾陣驟雨',
       54:'短暫陽光有驟雨',60:'多雲',61:'密雲',62:'微雨',63:'雨',64:'大雨',
       65:'狂風雷暴',70:'晴夜',71:'大致良好',72:'大致良好',76:'大致多雲',
       77:'大致多雲',80:'強烈季候風',90:'熱',91:'暖',92:'涼',93:'冷'
     };
-    // iPhone Weather 風格 SVG（太陽黃橙、雲灰、雨藍灰，避免整組偏藍）
     const WX_SVG = {
       sun: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="12" fill="#FFB340"/><g stroke="#FFB340" stroke-width="3" stroke-linecap="round"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M14 14l4.5 4.5M45.5 45.5L50 50M14 50l4.5-4.5M45.5 18.5L50 14"/></g></svg>',
       sunCloud: '<svg viewBox="0 0 64 64" fill="none"><circle cx="22" cy="22" r="9" fill="#FFB340"/><g stroke="#FFB340" stroke-width="2.5" stroke-linecap="round"><path d="M22 8v4M8 22h4M12 12l3 3"/></g><path d="M20 44c0-7 5.5-12 12.5-12 1.5-6 7-10 13.5-10 7.5 0 13.5 6 13.5 13.5 0 .5 0 1-.1 1.5 4.5 1 8 5 8 10 0 5.5-4.5 10-10 10H28c-4.4 0-8-3.6-8-8z" fill="#C7CDD6"/></svg>',
@@ -871,7 +865,6 @@
       }
     }
 
-    // ==================== Google Calendar ====================
     function renderEvents(events) {
       const list = document.getElementById('schedule');
       if (!events || events.length === 0) {
@@ -924,7 +917,6 @@
       }, target - now);
     }
 
-    // ==================== Init ====================
     function showError(msg) {
       var el = document.getElementById('jsError');
       if (!el) {
