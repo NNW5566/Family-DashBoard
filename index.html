@@ -108,7 +108,7 @@
       min-width: 90px;
     }
     .cal-weekday {
-      font-size: 1.35rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--accent);
       letter-spacing: 0.5px;
@@ -140,12 +140,13 @@
       flex: 1;
     }
     .cal-month {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--accent);
-      text-align: right;
-      margin-bottom: 6px;
+      text-align: left;
+      margin-bottom: 2px;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
     .cal-grid {
       display: grid;
@@ -227,7 +228,7 @@
     }
     .next-time {
       font-size: 2.15rem; font-weight: 700; line-height: 1.05; margin: 1px 0 2px;
-      color: var(--blue);
+      color: var(--green);
       font-variant-numeric: tabular-nums;
     }
     .next-sub { font-size: 0.78rem; color: var(--muted); }
@@ -299,11 +300,12 @@
     /* ===== Weather ===== */
     .weather-main { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .weather-icon-big {
-      font-size: 1.9rem; line-height: 1;
-      width: 2.2em; height: 2.2em;
+      width: 48px; height: 48px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
+    .weather-icon-big svg { width: 48px; height: 48px; display: block; }
+    .fd-icon svg { width: 22px; height: 22px; display: block; margin: 0 auto; }
     .temp { font-size: 1.85rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
     .weather-warning {
       font-size: 0.72rem;
@@ -359,9 +361,9 @@
 
       /* Calendar */
       .cal-widget { flex-direction: column; gap: 12px; }
-      .cal-left { min-width: auto; display: flex; align-items: baseline; gap: 12px; }
-      .cal-daynum { font-size: 2.6rem; margin: 0; }
-      .cal-month { text-align: left; margin-bottom: 4px; }
+      .cal-left { min-width: auto; }
+      .cal-daynum { font-size: 2.6rem; }
+      .cal-month { text-align: left; margin-bottom: 2px; }
       .cal-grid .day { width: 28px; height: 28px; line-height: 20px; font-size: 0.78rem; }
 
       /* Shuttle */
@@ -407,11 +409,11 @@
         <div class="cal-widget">
           <div class="cal-left">
             <div class="cal-weekday" id="calWeekday">—</div>
+            <div class="cal-month" id="calMonth">—</div>
             <div class="cal-daynum" id="calDayNum">—</div>
             <div class="cal-events-preview" id="calPreview">Loading...</div>
           </div>
           <div class="cal-right">
-            <div class="cal-month" id="calMonth">—</div>
             <div class="cal-grid" id="calGrid"></div>
           </div>
         </div>
@@ -428,7 +430,7 @@
       <div class="panel">
         <h2>TODAY WEATHER · 香港天文台 <button class="refresh-btn unlock-only" onclick="updateWeather()" title="手動更新">↻</button></h2>
         <div class="weather-main">
-          <div class="weather-icon-big" id="weatherIcon">🌤️</div>
+          <div class="weather-icon-big" id="weatherIcon"></div>
           <div class="temp" id="temp">--°</div>
           <div>
             <div id="weatherDesc">Loading...</div>
@@ -696,7 +698,7 @@
     // ==================== 倒數（可增刪，最多 4 項） ====================
     const MAX_COUNTDOWNS = 4;
     let countdowns = [
-      { id: 'c1', label: 'BACK TO SCHOOL', date: '2026-09-01' },
+      { id: 'c1', label: 'BACK TO SCHOOL', date: '2026-08-13' },
       { id: 'c2', label: 'INFLIXIMAB', date: '2026-08-21' }
     ];
     function daysUntil(dateStr) {
@@ -820,23 +822,43 @@
       65:'狂風雷暴',70:'晴夜',71:'大致良好',72:'大致良好',76:'大致多雲',
       77:'大致多雲',80:'強烈季候風',90:'熱',91:'暖',92:'涼',93:'冷'
     };
-    const HKO_EMOJI = {
-      50:'☀️',51:'🌤️',52:'⛅',53:'🌦️',54:'🌦️',
-      60:'☁️',61:'☁️',62:'🌧️',63:'🌧️',64:'⛈️',
-      65:'⛈️',70:'🌙',71:'🌤️',72:'🌤️',76:'☁️',
-      77:'☁️',80:'💨',90:'🔥',91:'🌡️',92:'❄️',93:'🥶'
+    // iPhone Weather 風格 SVG（太陽黃橙、雲灰、雨藍灰，避免整組偏藍）
+    const WX_SVG = {
+      sun: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="12" fill="#FFB340"/><g stroke="#FFB340" stroke-width="3" stroke-linecap="round"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M14 14l4.5 4.5M45.5 45.5L50 50M14 50l4.5-4.5M45.5 18.5L50 14"/></g></svg>',
+      sunCloud: '<svg viewBox="0 0 64 64" fill="none"><circle cx="22" cy="22" r="9" fill="#FFB340"/><g stroke="#FFB340" stroke-width="2.5" stroke-linecap="round"><path d="M22 8v4M8 22h4M12 12l3 3"/></g><path d="M20 44c0-7 5.5-12 12.5-12 1.5-6 7-10 13.5-10 7.5 0 13.5 6 13.5 13.5 0 .5 0 1-.1 1.5 4.5 1 8 5 8 10 0 5.5-4.5 10-10 10H28c-4.4 0-8-3.6-8-8z" fill="#C7CDD6"/></svg>',
+      cloud: '<svg viewBox="0 0 64 64" fill="none"><path d="M16 42c0-7 5.5-12 12.5-12 1.5-6 7-10 13.5-10 7.5 0 13.5 6 13.5 13.5 0 .5 0 1-.1 1.5 4.5 1 8 5 8 10 0 5.5-4.5 10-10 10H24c-4.4 0-8-3.6-8-8z" fill="#AEB6C2"/></svg>',
+      rain: '<svg viewBox="0 0 64 64" fill="none"><path d="M16 36c0-7 5.5-12 12.5-12 1.5-6 7-10 13.5-10 7.5 0 13.5 6 13.5 13.5 0 .5 0 1-.1 1.5 4.5 1 8 5 8 10 0 5.5-4.5 10-10 10H24c-4.4 0-8-3.6-8-8z" fill="#AEB6C2"/><g stroke="#5B9FD4" stroke-width="2.5" stroke-linecap="round"><path d="M24 50v6M32 48v8M40 50v6"/></g></svg>',
+      storm: '<svg viewBox="0 0 64 64" fill="none"><path d="M16 34c0-7 5.5-12 12.5-12 1.5-6 7-10 13.5-10 7.5 0 13.5 6 13.5 13.5 0 .5 0 1-.1 1.5 4.5 1 8 5 8 10 0 5.5-4.5 10-10 10H24c-4.4 0-8-3.6-8-8z" fill="#8E97A5"/><path d="M30 42l-4 10h6l-2 10 10-14h-6l4-6z" fill="#FFD60A"/></svg>',
+      moon: '<svg viewBox="0 0 64 64" fill="none"><path d="M40 12a20 20 0 1 0 12 32A16 16 0 1 1 40 12z" fill="#E8ECF0"/></svg>',
+      wind: '<svg viewBox="0 0 64 64" fill="none"><g stroke="#8E97A5" stroke-width="3" stroke-linecap="round"><path d="M10 24h32a6 6 0 1 0-6-6"/><path d="M10 34h38a6 6 0 1 1-6 6"/><path d="M10 44h24a5 5 0 1 0-5-5"/></g></svg>',
+      hot: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="12" fill="#FF9F0A"/><g stroke="#FF9F0A" stroke-width="3" stroke-linecap="round"><path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l5 5M45 45l5 5M14 50l5-5M45 19l5-5"/></g></svg>',
+      cold: '<svg viewBox="0 0 64 64" fill="none"><g stroke="#7DD3FC" stroke-width="2.5" stroke-linecap="round"><path d="M32 10v44M18 18l14 14 14-14M18 46l14-14 14 14M10 32h44"/></g></svg>',
+      fog: '<svg viewBox="0 0 64 64" fill="none"><g stroke="#AEB6C2" stroke-width="3" stroke-linecap="round"><path d="M12 24h40M16 34h32M14 44h36"/></g></svg>'
     };
-    function emojiFromText(text) {
-      if (!text) return '🌡️';
-      if (text.includes('雷')) return '⛈️';
-      if (text.includes('大雨') || text.includes('暴雨')) return '🌧️';
-      if (text.includes('雨')) return '🌦️';
-      if (text.includes('晴') || text.includes('陽')) return '☀️';
-      if (text.includes('雲')) return '☁️';
-      if (text.includes('霧')) return '🌫️';
-      if (text.includes('風')) return '💨';
-      return '🌡️';
+    function wxIconKey(code) {
+      const map = {
+        50:'sun',51:'sunCloud',52:'sunCloud',53:'rain',54:'rain',
+        60:'cloud',61:'cloud',62:'rain',63:'rain',64:'storm',
+        65:'storm',70:'moon',71:'sunCloud',72:'sunCloud',76:'cloud',
+        77:'cloud',80:'wind',90:'hot',91:'sun',92:'cold',93:'cold'
+      };
+      return map[code] || 'sunCloud';
     }
+    function wxIconFromText(text) {
+      if (!text) return 'sunCloud';
+      if (text.includes('雷')) return 'storm';
+      if (text.includes('大雨') || text.includes('暴雨')) return 'storm';
+      if (text.includes('雨')) return 'rain';
+      if (text.includes('晴') || text.includes('陽')) return 'sun';
+      if (text.includes('雲')) return 'cloud';
+      if (text.includes('霧')) return 'fog';
+      if (text.includes('風')) return 'wind';
+      if (text.includes('冷') || text.includes('涼')) return 'cold';
+      if (text.includes('熱')) return 'hot';
+      return 'sunCloud';
+    }
+    function wxSvg(key) { return WX_SVG[key] || WX_SVG.sunCloud; }
+
     async function updateWeather() {
       try {
         const res = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc');
@@ -850,14 +872,13 @@
         document.getElementById('rain').textContent = (rain?.max ?? 0) + ' mm';
         const iconCode = data.icon?.[0];
         document.getElementById('weatherDesc').textContent = HKO_ICON[iconCode] || ('Icon ' + iconCode);
-        document.getElementById('weatherIcon').textContent = HKO_EMOJI[iconCode] || '🌤️';
+        document.getElementById('weatherIcon').innerHTML = wxSvg(wxIconKey(iconCode));
         if (data.updateTime) {
           const t = new Date(data.updateTime);
           document.getElementById('wxUpdate').textContent =
             String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
         }
         document.getElementById('feels').textContent = '沙田 · 香港天文台';
-        // 警告
         const warn = data.warningMessage;
         const warnEl = document.getElementById('weatherWarning');
         if (warn && warn.length) {
@@ -874,7 +895,6 @@
       } catch (e) {
         document.getElementById('weatherDesc').textContent = '天氣暫時無法更新';
       }
-      // 未來幾天預報
       try {
         const res2 = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc');
         const fnd = await res2.json();
@@ -884,10 +904,10 @@
           const week = weekMap[d.week] || d.week?.slice(-1) || '';
           const maxT = d.forecastMaxtemp?.value ?? '--';
           const minT = d.forecastMintemp?.value ?? '--';
-          const emoji = HKO_EMOJI[d.ForecastIcon] || emojiFromText(d.forecastWeather);
+          const key = d.ForecastIcon ? wxIconKey(d.ForecastIcon) : wxIconFromText(d.forecastWeather);
           return `<div class="forecast-day">
             <div class="fd-week">${week}</div>
-            <div class="fd-icon" style="font-size:1.2rem">${emoji}</div>
+            <div class="fd-icon">${wxSvg(key)}</div>
             <div class="fd-temp">${minT}~${maxT}°</div>
           </div>`;
         }).join('');
