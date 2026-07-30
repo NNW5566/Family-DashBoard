@@ -435,8 +435,8 @@
       <div class="meta">
         <div class="header-clock" id="calClock">--:--</div>
         <button class="toggle-btn unlock-only" id="themeBtn" onclick="toggleTheme()" title="切換深色/淺色">🌙</button>
-        <button class="toggle-btn unlock-only" id="layoutBtn" onclick="toggleLayout()" title="切換全螢幕/卡片模式">滿</button>
         <button class="toggle-btn" id="lockBtn" onclick="toggleLock()" title="鎖定/解鎖">🔓</button>
+        <button class="toggle-btn unlock-only" id="layoutBtn" onclick="toggleLayout()" title="切換全螢幕/卡片模式">▣</button>
       </div>
     </header>
 
@@ -805,11 +805,11 @@
     function applyLayout(mode) {
       if (mode === 'card') {
         document.body.classList.add('layout-card');
-        document.getElementById('layoutBtn').textContent = '卡';
+        document.getElementById('layoutBtn').textContent = '□';
         document.getElementById('layoutBtn').title = '切換到 iPad 全螢幕模式';
       } else {
         document.body.classList.remove('layout-card');
-        document.getElementById('layoutBtn').textContent = '滿';
+        document.getElementById('layoutBtn').textContent = '▣';
         document.getElementById('layoutBtn').title = '切換到卡片模式';
       }
     }
