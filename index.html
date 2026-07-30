@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Dashboard">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#eceef1">
+  <meta name="format-detection" content="telephone=no">
   <title>Family Dashboard</title>
   <style>
     :root {
@@ -84,6 +85,24 @@
     }
     body.locked .frame {
       opacity: 0.98;
+    }
+    /* Card mode = previous non-fullscreen look */
+    body.layout-card {
+      padding: 12px;
+      min-height: 100vh;
+    }
+    body.layout-card .frame {
+      max-width: 960px;
+      width: auto;
+      min-height: 0;
+      margin: 0 auto;
+      border: 3px solid var(--frame-border);
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      display: block;
+    }
+    body.layout-card .frame > .grid {
+      flex: none;
     }
     header {
       display: flex;
@@ -416,6 +435,7 @@
       <div class="meta">
         <div class="header-clock" id="calClock">--:--</div>
         <button class="toggle-btn unlock-only" id="themeBtn" onclick="toggleTheme()" title="切換深色/淺色">🌙</button>
+        <button class="toggle-btn unlock-only" id="layoutBtn" onclick="toggleLayout()" title="切換全螢幕/卡片模式">滿</button>
         <button class="toggle-btn" id="lockBtn" onclick="toggleLock()" title="鎖定/解鎖">🔓</button>
       </div>
     </header>
@@ -782,6 +802,32 @@
         }
       } catch(e) {}
     }
+    function applyLayout(mode) {
+      if (mode === 'card') {
+        document.body.classList.add('layout-card');
+        document.getElementById('layoutBtn').textContent = '卡';
+        document.getElementById('layoutBtn').title = '切換到 iPad 全螢幕模式';
+      } else {
+        document.body.classList.remove('layout-card');
+        document.getElementById('layoutBtn').textContent = '滿';
+        document.getElementById('layoutBtn').title = '切換到卡片模式';
+      }
+    }
+    function toggleLayout() {
+      var isCard = document.body.classList.contains('layout-card');
+      var next = isCard ? 'full' : 'card';
+      applyLayout(next);
+      try { localStorage.setItem('dashboard-layout', next); } catch(e) {}
+    }
+    function loadLayout() {
+      try {
+        var mode = localStorage.getItem('dashboard-layout');
+        if (mode === 'card') applyLayout('card');
+        else applyLayout('full');
+      } catch(e) {
+        applyLayout('full');
+      }
+    }
 
     function updateClock() {
       const now = new Date();
@@ -964,6 +1010,7 @@
         updateClock();
         loadRoutes();
         loadLock();
+        loadLayout();
         updateShuttles();
         loadCountdowns();
         updateWeather();
